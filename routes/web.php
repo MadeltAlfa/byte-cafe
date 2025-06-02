@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rooms/{room}', [BookingController::class, 'show'])->name('rooms.show');
     Route::get('/seats/{seat}', [BookingController::class, 'seat'])->name('seats.show');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('bookings.index');
     Route::get('/bookings/{booking}', [BookingController::class, 'showBooking'])->name('bookings.show');
 });
 

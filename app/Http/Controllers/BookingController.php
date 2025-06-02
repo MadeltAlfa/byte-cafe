@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Seat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -61,9 +62,24 @@ class BookingController extends Controller
     public function showBooking(Booking $booking)
     {
         if ($booking->user_id !== auth()->id()) {
-            abort(403);
+            abort(403, 'Anda tidak berhak melihat booking ini.');
         }
 
         return view('bookings.show', compact('booking'));
+    }
+
+    public function myBookings()
+    {
+        // Pastikan user sedang login sebelum mencoba mengambil booking
+        if (Auth::check()) {
+            // Ambil semua booking yang dimiliki oleh user yang sedang login
+            // Urutkan dari yang terbaru atau sesuai kebutuhan Anda
+            $bookings = Auth::user()->bookings()->orderBy('created_at', 'desc')->get();
+            return view('bookings.index', compact('bookings')); // Menggunakan view 'bookings.index'
+        }
+
+        // Jika user tidak login (seharusnya sudah dicegah oleh middleware 'auth'),
+        // bisa diarahkan kembali atau tampilkan pesan error
+        return redirect()->route('login')->with('error', 'Anda harus login untuk melihat booking Anda.');
     }
 }

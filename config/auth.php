@@ -38,8 +38,14 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'users', // Ini adalah provider untuk model App\Models\User (pelanggan)
         ],
+        // --- TAMBAHKAN GUARD 'admin' DI SINI ---
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins', // Ini adalah provider untuk model App\Models\Admin
+        ],
+        // --- AKHIR TAMBAHAN ---
     ],
 
     /*
@@ -62,8 +68,14 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => env('AUTH_MODEL', App\Models\User::class), // Ini adalah model untuk pelanggan (User Breeze)
         ],
+        // --- TAMBAHKAN PROVIDER 'admins' DI SINI ---
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class, // Ini adalah model untuk admin (Filament)
+        ],
+        // --- AKHIR TAMBAHAN ---
 
         // 'users' => [
         //     'driver' => 'database',
@@ -97,6 +109,14 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        // --- OPSIONAL: Anda juga bisa menambahkan konfigurasi password reset untuk admin jika diperlukan ---
+        'admins' => [
+            'provider' => 'admins',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'), // Bisa sama atau beda tabel
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        // --- AKHIR OPSIONAL ---
     ],
 
     /*
